@@ -3,9 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>MY YAS • Togo</title>
-    <!-- Font Awesome pour les icônes modernes -->
+    <title>MY YAS • Togo - Analyse Mensuelle</title>
+    <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         /* ===== STYLE MODERNE - COULEURS DRAPEAU TOGOLAIS ===== */
         :root {
@@ -67,7 +69,7 @@
         }
 
         .pocket-card {
-            max-width: 440px;
+            max-width: 480px;
             width: 100%;
             background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
@@ -98,17 +100,6 @@
             transform: rotate(-5deg);
         }
 
-        .app-header::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, var(--togo-yellow) 0%, transparent 30%);
-            opacity: 0.1;
-        }
-
         .brand-container {
             display: flex;
             align-items: center;
@@ -133,8 +124,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: white;
             position: relative;
             overflow: hidden;
         }
@@ -390,7 +379,7 @@
         }
 
         /* ===== SECTIONS ===== */
-        .ussd-section, .saisie-section, .reset-section {
+        .ussd-section, .saisie-section, .reset-section, .stats-section {
             background: white;
             border-radius: 28px;
             padding: 24px;
@@ -524,6 +513,161 @@
         .ussd-card:hover .ussd-action {
             background: white;
             color: var(--togo-green);
+        }
+
+        /* ===== FILTRES HISTORIQUE ===== */
+        .filters-container {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            color: var(--gray);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .filter-select, .filter-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .filter-select:focus, .filter-input:focus {
+            border-color: var(--togo-green);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(0,106,78,0.1);
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .filter-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.apply {
+            background: var(--togo-green);
+            color: white;
+        }
+
+        .filter-btn.reset {
+            background: #f1f5f9;
+            color: var(--gray);
+        }
+
+        /* ===== STATISTIQUES ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: linear-gradient(145deg, #f8fafc, white);
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(0,106,78,0.1);
+        }
+
+        .stat-icon {
+            font-size: 28px;
+            color: var(--togo-green);
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .month-selector {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8fafc;
+            border-radius: 50px;
+            padding: 6px;
+            margin-bottom: 20px;
+        }
+
+        .month-nav {
+            background: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--togo-green);
+            transition: all 0.2s;
+        }
+
+        .month-nav:hover {
+            background: var(--togo-green);
+            color: white;
+        }
+
+        .current-month {
+            font-weight: 700;
+            color: var(--dark);
+            font-size: 16px;
+        }
+
+        .chart-container {
+            background: white;
+            border-radius: 20px;
+            padding: 16px;
+            margin-bottom: 20px;
+            height: 200px;
+            position: relative;
         }
 
         /* ===== SAISIE MANUELLE ===== */
@@ -664,12 +808,12 @@
             opacity: 0.9;
         }
 
-        /* ===== HISTORIQUE ===== */
+        /* ===== HISTORIQUE LISTE ===== */
         .historique-list {
             background: white;
             border-radius: 20px;
             padding: 16px;
-            max-height: 250px;
+            max-height: 350px;
             overflow-y: auto;
             border: 1px solid rgba(0,0,0,0.02);
         }
@@ -678,7 +822,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 14px;
+            padding: 16px;
             border-bottom: 1px solid #f1f5f9;
             transition: all 0.2s;
         }
@@ -691,27 +835,81 @@
             border-bottom: none;
         }
 
+        .historique-icon {
+            width: 44px;
+            height: 44px;
+            background: #f1f5f9;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--togo-green);
+            font-size: 20px;
+            margin-right: 14px;
+        }
+
+        .historique-info {
+            flex: 1;
+        }
+
         .historique-type {
-            font-weight: 600;
-            color: var(--dark);
-        }
-
-        .historique-date {
-            font-size: 11px;
-            color: var(--gray);
-            margin-top: 4px;
-        }
-
-        .historique-montant {
             font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 4px;
+        }
+
+        .historique-details {
+            display: flex;
+            gap: 12px;
+            font-size: 12px;
+            color: var(--gray);
+        }
+
+        .historique-amount {
+            font-weight: 700;
+            font-size: 18px;
+        }
+
+        .historique-amount.positif {
             color: var(--togo-green);
         }
 
-        .historique-montant.negatif {
+        .historique-amount.negatif {
             color: var(--togo-red);
         }
 
-        /* ===== SMS FLASH MODERNE ===== */
+        /* ===== PAGINATION ===== */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+        }
+
+        .page-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: var(--gray);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .page-btn.active {
+            background: var(--togo-green);
+            color: white;
+            border-color: var(--togo-green);
+        }
+
+        .page-btn:hover {
+            background: var(--togo-green);
+            color: white;
+        }
+
+        /* ===== SMS FLASH ===== */
         .sms-flash {
             position: fixed;
             top: 20px;
@@ -727,7 +925,6 @@
             display: none;
             z-index: 10001;
             animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(0,106,78,0.1);
         }
 
         .sms-flash.show {
@@ -816,7 +1013,7 @@
             transform: scale(1.1);
         }
 
-        /* ===== TOAST MODERNE ===== */
+        /* ===== TOAST ===== */
         .toast-pocket {
             position: fixed;
             bottom: 30px;
@@ -863,6 +1060,7 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-wrap: wrap;
         }
 
         .footer-flag {
@@ -874,36 +1072,19 @@
 
         /* ===== RESPONSIVE ===== */
         @media (max-width: 380px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .filter-row { flex-direction: column; }
             .saisie-grid { grid-template-columns: 1fr; }
             .reset-buttons { flex-direction: column; }
             .quick-buttons { grid-template-columns: 1fr; }
             .brand-name { font-size: 22px; }
         }
-
-        /* ===== SCROLLBAR PERSONNALISÉE ===== */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f5f9;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--togo-green);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #004c3a;
-        }
     </style>
 </head>
 <body>
     <!-- ÉCRAN DE CONNEXION -->
-    <div id="authScreen" class="pocket-card auth-screen">
-        <div class="app-header" style="background: linear-gradient(135deg, var(--togo-green), #004c3a);">
+    <div id="authScreen" class="pocket-card" style="display: block;">
+        <div class="app-header">
             <div class="brand-container">
                 <div class="brand-logo">
                     <div class="flag-logo"></div>
@@ -918,7 +1099,6 @@
                     <i class="fas fa-code"></i> KOLA
                 </div>
             </div>
-            
             <div style="text-align: center; margin-top: 30px;">
                 <div style="font-size: 32px; margin-bottom: 16px;">🇹🇬</div>
                 <div style="font-size: 28px; font-weight: 800; margin-bottom: 8px;">MY YAS</div>
@@ -935,13 +1115,13 @@
         </div>
 
         <div style="padding: 24px;">
-            <div class="auth-tabs" style="background: #f1f5f9; border-radius: 50px; padding: 5px; margin-bottom: 30px;">
-                <div id="loginTab" class="auth-tab active" onclick="switchAuthTab('login')" style="padding: 14px; border-radius: 50px; text-align: center; font-weight: 700; cursor: pointer;">Connexion</div>
-                <div id="registerTab" class="auth-tab" onclick="switchAuthTab('register')" style="padding: 14px; border-radius: 50px; text-align: center; font-weight: 700; cursor: pointer;">Inscription</div>
+            <div class="auth-tabs" style="display: flex; background: #f1f5f9; border-radius: 50px; padding: 5px; margin-bottom: 30px;">
+                <div id="loginTab" class="auth-tab active" onclick="switchAuthTab('login')" style="flex: 1; text-align: center; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; background: white; color: var(--togo-green);">Connexion</div>
+                <div id="registerTab" class="auth-tab" onclick="switchAuthTab('register')" style="flex: 1; text-align: center; padding: 14px; border-radius: 50px; font-weight: 700; cursor: pointer; color: var(--gray);">Inscription</div>
             </div>
 
             <!-- FORMULAIRE CONNEXION -->
-            <div id="loginForm" class="auth-form" style="display: flex; flex-direction: column; gap: 20px;">
+            <div id="loginForm" style="display: flex; flex-direction: column; gap: 20px;">
                 <div style="background: #f8fafc; border-radius: 20px; padding: 4px 20px;">
                     <label style="display: block; font-size: 12px; color: var(--gray); margin-top: 12px;">📞 Numéro de téléphone</label>
                     <input type="tel" id="loginPhone" style="width: 100%; background: transparent; border: none; padding: 12px 0; font-size: 18px; font-weight: 600; outline: none;" placeholder="90 00 00 00" maxlength="8" inputmode="numeric">
@@ -959,7 +1139,7 @@
             </div>
 
             <!-- FORMULAIRE INSCRIPTION -->
-            <div id="registerForm" class="auth-form" style="display: none; flex-direction: column; gap: 20px;">
+            <div id="registerForm" style="display: none; flex-direction: column; gap: 20px;">
                 <div style="background: #f8fafc; border-radius: 20px; padding: 4px 20px;">
                     <label style="display: block; font-size: 12px; color: var(--gray); margin-top: 12px;">👤 Nom complet</label>
                     <input type="text" id="registerName" style="width: 100%; background: transparent; border: none; padding: 12px 0; font-size: 18px; font-weight: 600; outline: none;" placeholder="Jean Dupont">
@@ -987,7 +1167,7 @@
     </div>
 
     <!-- ÉCRAN PRINCIPAL -->
-    <div id="mainScreen" class="pocket-card main-screen" style="display: none;">
+    <div id="mainScreen" class="pocket-card" style="display: none;">
         <div class="app-header">
             <div class="brand-container">
                 <div class="brand-logo">
@@ -995,7 +1175,7 @@
                     <div class="brand-text">
                         <div class="brand-name">MY YAS</div>
                         <div class="brand-sub">
-                            <i class="fas fa-map-marker-alt" style="font-size: 10px;"></i> Lomé, Togo
+                            <i class="fas fa-map-marker-alt"></i> Lomé, Togo
                         </div>
                     </div>
                 </div>
@@ -1051,16 +1231,16 @@
         <!-- Onglets principaux -->
         <div class="tabs-container">
             <div class="tab active" onclick="switchMainTab('ussd')">
-                <i class="fas fa-dial"></i> Codes USSD
+                <i class="fas fa-dial"></i> Codes
             </div>
-            <div class="tab" onclick="switchMainTab('soldes')">
-                <i class="fas fa-coins"></i> Soldes
+            <div class="tab" onclick="switchMainTab('historique')">
+                <i class="fas fa-clock-rotate-left"></i> Historique
+            </div>
+            <div class="tab" onclick="switchMainTab('statistiques')">
+                <i class="fas fa-chart-line"></i> Analyse
             </div>
             <div class="tab" onclick="switchMainTab('saisie')">
                 <i class="fas fa-pen"></i> Saisie
-            </div>
-            <div class="tab" onclick="switchMainTab('compte')">
-                <i class="fas fa-user"></i> Compte
             </div>
         </div>
 
@@ -1206,31 +1386,161 @@
                         </div>
                         <div class="ussd-action"><i class="fas fa-phone-alt"></i></div>
                     </div>
+                    <div class="ussd-card" onclick="dialUssd('tel:8845')">
+                        <div class="ussd-info">
+                            <div class="ussd-code-text">8845</div>
+                            <div class="ussd-desc">Assistance</div>
+                        </div>
+                        <div class="ussd-action"><i class="fas fa-phone-alt"></i></div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- ===== PANEL SOLDES ===== -->
-        <div id="panel-soldes" class="panel">
+        <!-- ===== PANEL HISTORIQUE AVANCÉ ===== -->
+        <div id="panel-historique" class="panel">
             <div class="ussd-section">
                 <div class="section-title">
-                    <i class="fas fa-coins"></i>
-                    <span>Consultation des soldes</span>
+                    <i class="fas fa-filter"></i>
+                    <span>Filtres</span>
                 </div>
-                <div style="display: flex; gap: 16px; margin-bottom: 20px;">
-                    <div style="flex: 1; background: linear-gradient(145deg, white, #f8fafc); border: 1px solid rgba(0,106,78,0.2); border-radius: 24px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="getSoldeMixx()">
-                        <i class="fas fa-wallet" style="font-size: 32px; color: var(--togo-green); margin-bottom: 12px;"></i>
-                        <div style="font-size: 22px; font-weight: 800; font-family: monospace; color: var(--togo-green); margin-bottom: 8px;">*145*7#</div>
-                        <div style="color: var(--gray);">Solde Mixx</div>
+                <div class="filters-container">
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <div class="filter-label">
+                                <i class="fas fa-calendar"></i> Période
+                            </div>
+                            <select id="filterPeriod" class="filter-select">
+                                <option value="all">Toutes les périodes</option>
+                                <option value="today">Aujourd'hui</option>
+                                <option value="week">Cette semaine</option>
+                                <option value="month">Ce mois</option>
+                                <option value="year">Cette année</option>
+                                <option value="custom">Personnalisée</option>
+                            </select>
+                        </div>
+                        <div class="filter-group" id="customDateGroup" style="display: none;">
+                            <div class="filter-label">
+                                <i class="fas fa-calendar-alt"></i> Date
+                            </div>
+                            <input type="date" id="customDate" class="filter-input">
+                        </div>
                     </div>
-                    <div style="flex: 1; background: linear-gradient(145deg, white, #f8fafc); border: 1px solid rgba(0,106,78,0.2); border-radius: 24px; padding: 24px; text-align: center; cursor: pointer; transition: all 0.3s;" onclick="getSoldeCredit()">
-                        <i class="fas fa-sim-card" style="font-size: 32px; color: var(--togo-green); margin-bottom: 12px;"></i>
-                        <div style="font-size: 22px; font-weight: 800; font-family: monospace; color: var(--togo-green); margin-bottom: 8px;">*444#</div>
-                        <div style="color: var(--gray);">Solde Crédit</div>
+                    <div class="filter-row">
+                        <div class="filter-group">
+                            <div class="filter-label">
+                                <i class="fas fa-tag"></i> Type d'opération
+                            </div>
+                            <select id="filterType" class="filter-select">
+                                <option value="all">Tous les types</option>
+                                <option value="Ajout Mixx">Ajout Mixx</option>
+                                <option value="Ajout Crédit">Ajout Crédit</option>
+                                <option value="Réinitialisation Mixx">Réinitialisation Mixx</option>
+                                <option value="Réinitialisation Crédit">Réinitialisation Crédit</option>
+                                <option value="Réinitialisation Totale">Réinitialisation Totale</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <div class="filter-label">
+                                <i class="fas fa-sort"></i> Tri
+                            </div>
+                            <select id="filterSort" class="filter-select">
+                                <option value="desc">Plus récent</option>
+                                <option value="asc">Plus ancien</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn apply" onclick="applyFilters()">
+                            <i class="fas fa-search"></i> Appliquer
+                        </button>
+                        <button class="filter-btn reset" onclick="resetFilters()">
+                            <i class="fas fa-undo"></i> Réinitialiser
+                        </button>
                     </div>
                 </div>
-                <div style="padding: 16px; background: #fff3cd; border-radius: 16px; color: #856404; text-align: center;">
-                    <i class="fas fa-bolt"></i> Cliquez sur un code pour composer immédiatement
+
+                <div class="section-title" style="margin-top: 24px;">
+                    <i class="fas fa-list-ul"></i>
+                    <span>Liste des opérations</span>
+                    <span id="operationsCount" style="margin-left: auto; font-size: 14px; color: var(--gray);"></span>
+                </div>
+                <div id="historiqueOperations" class="historique-list">
+                    <!-- Historique dynamique -->
+                </div>
+                <div id="pagination" class="pagination">
+                    <!-- Pagination dynamique -->
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== PANEL STATISTIQUES / ANALYSE MENSUELLE ===== -->
+        <div id="panel-statistiques" class="panel">
+            <div class="stats-section">
+                <div class="section-title">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Analyse mensuelle</span>
+                </div>
+
+                <!-- Sélecteur de mois -->
+                <div class="month-selector">
+                    <button class="month-nav" onclick="changeMonth(-1)">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <span class="current-month" id="currentMonthDisplay">Février 2026</span>
+                    <button class="month-nav" onclick="changeMonth(1)">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+
+                <!-- Statistiques clés -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="stat-value" id="monthlyAdditions">0 FCFA</div>
+                        <div class="stat-label">Ajouts (FCFA)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-minus-circle"></i>
+                        </div>
+                        <div class="stat-value" id="monthlyResets">0</div>
+                        <div class="stat-label">Réinitialisations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calculator"></i>
+                        </div>
+                        <div class="stat-value" id="monthlyOperations">0</div>
+                        <div class="stat-label">Opérations</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-trend-up"></i>
+                        </div>
+                        <div class="stat-value" id="monthlyAverage">0 FCFA</div>
+                        <div class="stat-label">Moyenne</div>
+                    </div>
+                </div>
+
+                <!-- Graphique d'évolution -->
+                <div class="section-title">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Évolution 7 derniers jours</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="operationsChart"></canvas>
+                </div>
+
+                <!-- Répartition par type -->
+                <div class="section-title">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Répartition par type</span>
+                </div>
+                <div class="chart-container">
+                    <canvas id="typeChart"></canvas>
                 </div>
             </div>
         </div>
@@ -1302,51 +1612,6 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Historique des opérations -->
-            <div class="ussd-section">
-                <div class="section-title">
-                    <i class="fas fa-clock-rotate-left"></i>
-                    <span>Dernières opérations</span>
-                </div>
-                <div id="historiqueOperations" class="historique-list">
-                    <!-- Historique dynamique -->
-                </div>
-            </div>
-        </div>
-
-        <!-- ===== PANEL COMPTE ===== -->
-        <div id="panel-compte" class="panel">
-            <div class="ussd-section">
-                <div class="section-title">
-                    <i class="fas fa-user"></i>
-                    <span>Mon Compte</span>
-                </div>
-                <div style="text-align: center; padding: 20px;">
-                    <div style="width: 100px; height: 100px; background: linear-gradient(135deg, var(--togo-green), var(--togo-yellow)); border-radius: 30px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 48px; color: white; box-shadow: 0 16px 32px rgba(0,106,78,0.2);" id="profileAvatar">
-                        🇹🇬
-                    </div>
-                    <div style="font-size: 24px; font-weight: 800; color: var(--dark);" id="profileName">KOLA Maniwah</div>
-                    <div style="font-size: 16px; color: var(--gray); margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 6px;" id="profilePhone">
-                        <i class="fas fa-phone-alt"></i> +228 90 00 00 00
-                    </div>
-                    
-                    <div style="background: linear-gradient(145deg, #f8fafc, white); border-radius: 24px; padding: 20px; margin-top: 24px; text-align: left; border: 1px solid rgba(0,106,78,0.1);">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
-                            <span style="color: var(--gray);"><i class="fas fa-wallet" style="color: var(--togo-green);"></i> Solde Mixx:</span>
-                            <span style="font-weight: 800; color: var(--togo-green);" id="profileSoldeMixx">0 FCFA</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between;">
-                            <span style="color: var(--gray);"><i class="fas fa-sim-card" style="color: var(--togo-green);"></i> Solde Crédit:</span>
-                            <span style="font-weight: 800; color: var(--togo-green);" id="profileSoldeCredit">0 FCFA</span>
-                        </div>
-                    </div>
-                    
-                    <button onclick="logout()" style="margin-top: 24px; background: linear-gradient(135deg, var(--togo-red), #b01030); color: white; border: none; border-radius: 50px; padding: 16px 32px; font-weight: 700; cursor: pointer; transition: all 0.3s; box-shadow: 0 8px 16px rgba(210,16,52,0.2);">
-                        <i class="fas fa-sign-out-alt"></i> DÉCONNEXION
-                    </button>
-                </div>
-            </div>
         </div>
 
         <!-- Footer -->
@@ -1387,9 +1652,9 @@
 
     <script>
         // ===========================================
-        // MY YAS - Application de Paiement Mobile Togo
+        // MY YAS - VERSION COMPLÈTE FUSIONNÉE
+        // Codes USSD + Saisie + Historique + Analyse Mensuelle
         // Développé par KOLA Maniwah Essohouna
-        // Enseignant & Développeur Togolais
         // ===========================================
         
         // ---------- CONSTANTES ----------
@@ -1397,10 +1662,17 @@
         const CURRENT_USER_KEY = 'myyas_current';
         const OPERATIONS_KEY = 'myyas_operations_';
         
-        // ---------- BASE DE DONNÉES LOCALE ----------
+        // ---------- ÉTATS ----------
         let users = [];
         let currentUser = null;
         let operations = [];
+        let filteredOperations = [];
+        let currentPage = 1;
+        let itemsPerPage = 10;
+        let currentYear = new Date().getFullYear();
+        let currentMonth = new Date().getMonth();
+        let chartInstance = null;
+        let typeChartInstance = null;
 
         // ===== CHARGEMENT DES DONNÉES =====
         function loadUsers() {
@@ -1412,25 +1684,20 @@
                     users = [];
                 }
             }
-            
             if (!users || users.length === 0) {
-                // Utilisateur par défaut - KOLA Maniwah
-                users = [
-                    {
-                        id: 1,
-                        name: "KOLA Maniwah Essohouna",
-                        phone: "90000000",
-                        pin: "1234",
-                        soldeMixx: 15000,
-                        soldeCredit: 5000,
-                        totalSent: 25000,
-                        transactions: 12,
-                        createdAt: new Date().toISOString()
-                    }
-                ];
+                users = [{
+                    id: 1,
+                    name: "KOLA Maniwah Essohouna",
+                    phone: "90000000",
+                    pin: "1234",
+                    soldeMixx: 15000,
+                    soldeCredit: 5000,
+                    totalSent: 25000,
+                    transactions: 12,
+                    createdAt: new Date().toISOString()
+                }];
                 saveUsers();
             }
-            
             const current = localStorage.getItem(CURRENT_USER_KEY);
             if (current) {
                 try {
@@ -1449,13 +1716,66 @@
             if (currentUser) {
                 localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(currentUser));
                 const index = users.findIndex(u => u.id === currentUser.id);
-                if (index !== -1) {
-                    users[index] = currentUser;
-                } else {
-                    users.push(currentUser);
-                }
+                if (index !== -1) users[index] = currentUser;
+                else users.push(currentUser);
                 saveUsers();
             }
+        }
+
+        // ===== GESTION DES OPÉRATIONS =====
+        function saveOperations() {
+            if (currentUser) {
+                const key = OPERATIONS_KEY + currentUser.id;
+                localStorage.setItem(key, JSON.stringify(operations));
+            }
+        }
+
+        function loadOperations() {
+            if (currentUser) {
+                const key = OPERATIONS_KEY + currentUser.id;
+                const stored = localStorage.getItem(key);
+                if (stored) {
+                    try {
+                        operations = JSON.parse(stored);
+                    } catch (e) {
+                        operations = [];
+                    }
+                }
+                if (operations.length === 0) {
+                    generateDemoData();
+                }
+                filteredOperations = [...operations];
+                updateHistoriqueOperations();
+                updateMonthlyStats();
+                updateCharts();
+            }
+        }
+
+        function generateDemoData() {
+            const types = [
+                'Ajout Mixx', 'Ajout Crédit', 
+                'Réinitialisation Mixx', 'Réinitialisation Crédit',
+                'Réinitialisation Totale'
+            ];
+            for (let i = 0; i < 30; i++) {
+                const date = new Date();
+                date.setDate(date.getDate() - Math.floor(Math.random() * 60));
+                const type = types[Math.floor(Math.random() * types.length)];
+                const montant = type.includes('Ajout') ? 
+                    Math.floor(Math.random() * 50000) + 1000 : 
+                    -Math.floor(Math.random() * 50000) - 1000;
+                
+                operations.push({
+                    type: type,
+                    montant: montant,
+                    date: date.toLocaleDateString('fr-FR') + ' ' + 
+                          date.toLocaleTimeString('fr-FR').slice(0,5),
+                    timestamp: date.getTime(),
+                    solde: Math.floor(Math.random() * 100000)
+                });
+            }
+            operations.sort((a, b) => b.timestamp - a.timestamp);
+            saveOperations();
         }
 
         // ===== AUTHENTIFICATION =====
@@ -1467,12 +1787,20 @@
             
             if (tab === 'login') {
                 loginTab.classList.add('active');
+                loginTab.style.background = 'white';
+                loginTab.style.color = 'var(--togo-green)';
                 registerTab.classList.remove('active');
+                registerTab.style.background = 'transparent';
+                registerTab.style.color = 'var(--gray)';
                 loginForm.style.display = 'flex';
                 registerForm.style.display = 'none';
             } else {
                 registerTab.classList.add('active');
+                registerTab.style.background = 'white';
+                registerTab.style.color = 'var(--togo-green)';
                 loginTab.classList.remove('active');
+                loginTab.style.background = 'transparent';
+                loginTab.style.color = 'var(--gray)';
                 registerForm.style.display = 'flex';
                 loginForm.style.display = 'none';
             }
@@ -1535,15 +1863,288 @@
             document.getElementById('mainScreen').style.display = 'block';
             updateUserInterface();
             loadOperations();
-            showToast(`🇹🇬 Bienvenue ${currentUser.name}`, 'success');
+            showToast('🇹🇬 Bienvenue ' + currentUser.name, 'success');
         }
 
-        function logout() {
-            currentUser = null;
-            localStorage.removeItem(CURRENT_USER_KEY);
-            document.getElementById('authScreen').style.display = 'block';
-            document.getElementById('mainScreen').style.display = 'none';
-            showToast('👋 Déconnexion réussie', 'success');
+        // ===== FILTRES AVANCÉS =====
+        function applyFilters() {
+            if (!currentUser) return;
+            
+            const period = document.getElementById('filterPeriod').value;
+            const type = document.getElementById('filterType').value;
+            const sort = document.getElementById('filterSort').value;
+            const customDate = document.getElementById('customDate').value;
+            
+            document.getElementById('customDateGroup').style.display = 
+                period === 'custom' ? 'block' : 'none';
+            
+            let filtered = operations.filter(op => {
+                const opDate = new Date(op.timestamp || Date.now());
+                const today = new Date();
+                
+                switch(period) {
+                    case 'today':
+                        return opDate.toDateString() === today.toDateString();
+                    case 'week':
+                        const weekAgo = new Date(today.setDate(today.getDate() - 7));
+                        return opDate >= weekAgo;
+                    case 'month':
+                        const monthAgo = new Date(today.setMonth(today.getMonth() - 1));
+                        return opDate >= monthAgo;
+                    case 'year':
+                        const yearAgo = new Date(today.setFullYear(today.getFullYear() - 1));
+                        return opDate >= yearAgo;
+                    case 'custom':
+                        if (customDate) {
+                            const filterDate = new Date(customDate);
+                            return opDate.toDateString() === filterDate.toDateString();
+                        }
+                        return true;
+                    default:
+                        return true;
+                }
+            });
+            
+            if (type !== 'all') {
+                filtered = filtered.filter(op => op.type === type);
+            }
+            
+            filtered.sort((a, b) => {
+                const dateA = a.timestamp || 0;
+                const dateB = b.timestamp || 0;
+                return sort === 'desc' ? dateB - dateA : dateA - dateB;
+            });
+            
+            filteredOperations = filtered;
+            currentPage = 1;
+            updateHistoriqueOperations();
+            showToast('✅ Filtres appliqués', 'success');
+        }
+
+        function resetFilters() {
+            document.getElementById('filterPeriod').value = 'all';
+            document.getElementById('filterType').value = 'all';
+            document.getElementById('filterSort').value = 'desc';
+            document.getElementById('customDate').value = '';
+            document.getElementById('customDateGroup').style.display = 'none';
+            filteredOperations = [...operations];
+            currentPage = 1;
+            updateHistoriqueOperations();
+            showToast('🔄 Filtres réinitialisés', 'info');
+        }
+
+        // ===== HISTORIQUE AVEC PAGINATION =====
+        function updateHistoriqueOperations() {
+            const historiqueDiv = document.getElementById('historiqueOperations');
+            if (!historiqueDiv) return;
+            
+            const countSpan = document.getElementById('operationsCount');
+            if (countSpan) {
+                countSpan.textContent = `${filteredOperations.length} opération(s)`;
+            }
+            
+            if (!filteredOperations || filteredOperations.length === 0) {
+                historiqueDiv.innerHTML = '<div style="text-align: center; padding: 40px; color: var(--gray);">' +
+                    '<i class="fas fa-inbox" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5;"></i>' +
+                    '<div>Aucune opération trouvée</div>' +
+                    '</div>';
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+            
+            const start = (currentPage - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+            const pageItems = filteredOperations.slice(start, end);
+            
+            let html = '';
+            pageItems.forEach(op => {
+                const isPositif = op.montant > 0;
+                html += `
+                    <div class="historique-item">
+                        <div style="display: flex; align-items: center;">
+                            <div class="historique-icon">
+                                <i class="fas fa-${isPositif ? 'plus' : 'minus'}"></i>
+                            </div>
+                            <div class="historique-info">
+                                <div class="historique-type">${op.type}</div>
+                                <div class="historique-details">
+                                    <span><i class="far fa-calendar"></i> ${op.date}</span>
+                                    <span><i class="fas fa-wallet"></i> ${op.solde?.toLocaleString() || 0} FCFA</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <span class="historique-amount ${isPositif ? 'positif' : 'negatif'}">
+                                ${isPositif ? '+' : '-'}${Math.abs(op.montant).toLocaleString()} FCFA
+                            </span>
+                        </div>
+                    </div>
+                `;
+            });
+            historiqueDiv.innerHTML = html;
+            
+            updatePagination();
+        }
+
+        function updatePagination() {
+            const paginationDiv = document.getElementById('pagination');
+            if (!paginationDiv) return;
+            
+            const totalPages = Math.ceil(filteredOperations.length / itemsPerPage);
+            if (totalPages <= 1) {
+                paginationDiv.innerHTML = '';
+                return;
+            }
+            
+            let html = '';
+            for (let i = 1; i <= Math.min(totalPages, 5); i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" 
+                    onclick="goToPage(${i})">${i}</button>`;
+            }
+            paginationDiv.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            updateHistoriqueOperations();
+        }
+
+        // ===== ANALYSE MENSUELLE =====
+        function changeMonth(delta) {
+            currentMonth += delta;
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
+            updateMonthlyStats();
+            updateCharts();
+        }
+
+        function updateMonthlyStats() {
+            const monthNames = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
+            
+            document.getElementById('currentMonthDisplay').textContent = 
+                `${monthNames[currentMonth]} ${currentYear}`;
+            
+            const monthOperations = operations.filter(op => {
+                const date = new Date(op.timestamp || Date.now());
+                return date.getMonth() === currentMonth && 
+                       date.getFullYear() === currentYear;
+            });
+            
+            const additions = monthOperations
+                .filter(op => op.montant > 0)
+                .reduce((sum, op) => sum + op.montant, 0);
+            
+            const resets = monthOperations
+                .filter(op => op.montant < 0)
+                .length;
+            
+            const totalOps = monthOperations.length;
+            const avgAmount = totalOps > 0 ? 
+                monthOperations.reduce((sum, op) => sum + Math.abs(op.montant), 0) / totalOps : 0;
+            
+            document.getElementById('monthlyAdditions').textContent = 
+                additions.toLocaleString() + ' FCFA';
+            document.getElementById('monthlyResets').textContent = resets;
+            document.getElementById('monthlyOperations').textContent = totalOps;
+            document.getElementById('monthlyAverage').textContent = 
+                Math.round(avgAmount).toLocaleString() + ' FCFA';
+        }
+
+        // ===== GRAPHIQUES =====
+        function updateCharts() {
+            if (!currentUser) return;
+            
+            const last7Days = [];
+            const dayLabels = [];
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                dayLabels.push(date.toLocaleDateString('fr-FR', { weekday: 'short' }));
+                
+                const dayOps = operations.filter(op => {
+                    const opDate = new Date(op.timestamp || Date.now());
+                    return opDate.toDateString() === date.toDateString();
+                });
+                
+                const total = dayOps.reduce((sum, op) => sum + Math.abs(op.montant), 0);
+                last7Days.push(total);
+            }
+            
+            const ctx = document.getElementById('operationsChart')?.getContext('2d');
+            if (ctx) {
+                if (chartInstance) chartInstance.destroy();
+                chartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dayLabels,
+                        datasets: [{
+                            label: 'Montant (FCFA)',
+                            data: last7Days,
+                            borderColor: '#006A4E',
+                            backgroundColor: 'rgba(0,106,78,0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    callback: function(value) {
+                                        return value.toLocaleString() + ' F';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            
+            const typeCount = {};
+            operations.forEach(op => {
+                typeCount[op.type] = (typeCount[op.type] || 0) + 1;
+            });
+            
+            const ctx2 = document.getElementById('typeChart')?.getContext('2d');
+            if (ctx2) {
+                if (typeChartInstance) typeChartInstance.destroy();
+                typeChartInstance = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: Object.keys(typeCount),
+                        datasets: [{
+                            data: Object.values(typeCount),
+                            backgroundColor: [
+                                '#006A4E', '#FFCE00', '#D21034', 
+                                '#00a651', '#ff4757', '#64748b'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { 
+                                position: 'bottom',
+                                labels: { boxWidth: 12, padding: 10 }
+                            }
+                        }
+                    }
+                });
+            }
         }
 
         // ===== AJOUT DE SOLDES =====
@@ -1552,26 +2153,32 @@
                 showToast('❌ Veuillez vous connecter', 'error');
                 return;
             }
-            
             const input = document.getElementById('saisieMixx');
             let valeur = parseInt(input.value);
-            
             if (isNaN(valeur) || valeur < 0) valeur = 0;
             
-            currentUser.soldeMixx += valeur;
-            saveCurrentUser();
-            
             if (valeur > 0) {
+                currentUser.soldeMixx += valeur;
+                saveCurrentUser();
+                
                 const operation = {
                     type: 'Ajout Mixx',
                     montant: valeur,
                     date: new Date().toLocaleString('fr-FR'),
+                    timestamp: Date.now(),
                     solde: currentUser.soldeMixx
                 };
                 operations.unshift(operation);
+                filteredOperations = [...operations];
                 saveOperations();
                 
+                updateUserInterface();
+                updateHistoriqueOperations();
+                updateMonthlyStats();
+                updateCharts();
+                
                 showToast(`✅ +${valeur.toLocaleString()} FCFA ajouté`, 'success');
+                input.value = '';
                 
                 const date = new Date();
                 const smsFlash = {
@@ -1582,11 +2189,6 @@
                 };
                 showSMSFlash(smsFlash);
             }
-            
-            updateUserInterface();
-            updateSaisieAffichage();
-            updateHistoriqueOperations();
-            input.value = '';
         }
 
         function ajouterSoldeCredit() {
@@ -1594,26 +2196,32 @@
                 showToast('❌ Veuillez vous connecter', 'error');
                 return;
             }
-            
             const input = document.getElementById('saisieCredit');
             let valeur = parseInt(input.value);
-            
             if (isNaN(valeur) || valeur < 0) valeur = 0;
             
-            currentUser.soldeCredit += valeur;
-            saveCurrentUser();
-            
             if (valeur > 0) {
+                currentUser.soldeCredit += valeur;
+                saveCurrentUser();
+                
                 const operation = {
                     type: 'Ajout Crédit',
                     montant: valeur,
                     date: new Date().toLocaleString('fr-FR'),
+                    timestamp: Date.now(),
                     solde: currentUser.soldeCredit
                 };
                 operations.unshift(operation);
+                filteredOperations = [...operations];
                 saveOperations();
                 
+                updateUserInterface();
+                updateHistoriqueOperations();
+                updateMonthlyStats();
+                updateCharts();
+                
                 showToast(`✅ +${valeur.toLocaleString()} FCFA ajouté`, 'success');
+                input.value = '';
                 
                 const date = new Date();
                 const smsFlash = {
@@ -1624,17 +2232,11 @@
                 };
                 showSMSFlash(smsFlash);
             }
-            
-            updateUserInterface();
-            updateSaisieAffichage();
-            updateHistoriqueOperations();
-            input.value = '';
         }
 
-        // ===== RÉINITIALISATION DES SOLDES =====
+        // ===== RÉINITIALISATION =====
         function resetSoldeMixx() {
             if (!currentUser) return;
-            
             if (confirm('💰 Réinitialiser le solde Mixx à 0 FCFA ?')) {
                 const ancienSolde = currentUser.soldeMixx;
                 currentUser.soldeMixx = 0;
@@ -1644,15 +2246,17 @@
                     type: 'Réinitialisation Mixx',
                     montant: -ancienSolde,
                     date: new Date().toLocaleString('fr-FR'),
+                    timestamp: Date.now(),
                     solde: 0
                 };
                 operations.unshift(operation);
+                filteredOperations = [...operations];
                 saveOperations();
                 
                 updateUserInterface();
-                updateSaisieAffichage();
                 updateHistoriqueOperations();
-                
+                updateMonthlyStats();
+                updateCharts();
                 showToast(`🔄 Solde Mixx réinitialisé`, 'success');
                 
                 const date = new Date();
@@ -1668,7 +2272,6 @@
 
         function resetSoldeCredit() {
             if (!currentUser) return;
-            
             if (confirm('📶 Réinitialiser le solde Crédit à 0 FCFA ?')) {
                 const ancienSolde = currentUser.soldeCredit;
                 currentUser.soldeCredit = 0;
@@ -1678,15 +2281,17 @@
                     type: 'Réinitialisation Crédit',
                     montant: -ancienSolde,
                     date: new Date().toLocaleString('fr-FR'),
+                    timestamp: Date.now(),
                     solde: 0
                 };
                 operations.unshift(operation);
+                filteredOperations = [...operations];
                 saveOperations();
                 
                 updateUserInterface();
-                updateSaisieAffichage();
                 updateHistoriqueOperations();
-                
+                updateMonthlyStats();
+                updateCharts();
                 showToast(`🔄 Solde Crédit réinitialisé`, 'success');
                 
                 const date = new Date();
@@ -1702,7 +2307,6 @@
 
         function resetAllSoldes() {
             if (!currentUser) return;
-            
             if (confirm('⚠️ RÉINITIALISER TOUS LES SOLDES À 0 FCFA ?')) {
                 const ancienMixx = currentUser.soldeMixx;
                 const ancienCredit = currentUser.soldeCredit;
@@ -1715,15 +2319,17 @@
                     type: 'Réinitialisation Totale',
                     montant: -(ancienMixx + ancienCredit),
                     date: new Date().toLocaleString('fr-FR'),
-                    solde: 'Mixx: 0, Crédit: 0'
+                    timestamp: Date.now(),
+                    solde: 0
                 };
                 operations.unshift(operation);
+                filteredOperations = [...operations];
                 saveOperations();
                 
                 updateUserInterface();
-                updateSaisieAffichage();
                 updateHistoriqueOperations();
-                
+                updateMonthlyStats();
+                updateCharts();
                 showToast(`🔄 Tous les soldes réinitialisés`, 'success');
                 
                 const date = new Date();
@@ -1737,86 +2343,22 @@
             }
         }
 
-        function updateSaisieAffichage() {
-            if (currentUser) {
-                document.getElementById('currentMixxValue').textContent = currentUser.soldeMixx.toLocaleString() + ' FCFA';
-                document.getElementById('currentCreditValue').textContent = currentUser.soldeCredit.toLocaleString() + ' FCFA';
-            }
-        }
-
-        // ===== GESTION DES OPÉRATIONS =====
-        function saveOperations() {
-            if (currentUser) {
-                const key = OPERATIONS_KEY + currentUser.id;
-                localStorage.setItem(key, JSON.stringify(operations));
-            }
-        }
-
-        function loadOperations() {
-            if (currentUser) {
-                const key = OPERATIONS_KEY + currentUser.id;
-                const stored = localStorage.getItem(key);
-                if (stored) {
-                    try {
-                        operations = JSON.parse(stored);
-                    } catch (e) {
-                        operations = [];
-                    }
-                } else {
-                    operations = [];
-                }
-                updateHistoriqueOperations();
-            }
-        }
-
-        function updateHistoriqueOperations() {
-            const historiqueDiv = document.getElementById('historiqueOperations');
-            if (!historiqueDiv) return;
-            
-            if (!operations || operations.length === 0) {
-                historiqueDiv.innerHTML = '<div style="text-align: center; padding: 30px; color: var(--gray);"><i class="fas fa-inbox" style="font-size: 24px; margin-bottom: 8px; display: block;"></i>Aucune opération</div>';
-                return;
-            }
-            
-            let html = '';
-            operations.slice(0, 8).forEach(op => {
-                const isNegatif = op.montant < 0;
-                html += `
-                    <div class="historique-item">
-                        <div>
-                            <div class="historique-type">${op.type}</div>
-                            <div class="historique-date"><i class="far fa-clock"></i> ${op.date}</div>
-                        </div>
-                        <div>
-                            <span class="historique-montant ${isNegatif ? 'negatif' : ''}">
-                                ${isNegatif ? '-' : '+'}${Math.abs(op.montant).toLocaleString()} FCFA
-                            </span>
-                        </div>
-                    </div>
-                `;
-            });
-            historiqueDiv.innerHTML = html;
-        }
-
         // ===== CODES USSD =====
         function dialUssd(code) {
             if (!code) return;
-            
             code = code.replace(/\s/g, '');
             showToast(`📞 ${code}`, 'success');
-            
             if (/Android/i.test(navigator.userAgent)) {
                 window.location.href = `tel:${encodeURIComponent(code)}`;
             } else {
                 navigator.clipboard.writeText(code).then(() => {
-                    alert(`Code ${code} copié !\nCollez-le dans votre téléphone.`);
+                    showToast(`📋 Code copié`, 'success');
                 }).catch(() => {
-                    alert(`Composez ${code} sur votre téléphone`);
+                    alert(`Code: ${code}`);
                 });
             }
         }
 
-        // ===== CONSULTATION SOLDES =====
         function getSoldeMixx() {
             if (!currentUser) {
                 showToast('❌ Veuillez vous connecter', 'error');
@@ -1848,7 +2390,7 @@
             
             setTimeout(() => {
                 document.getElementById('smsFlash').classList.remove('show');
-            }, 6000);
+            }, 5000);
         }
 
         function closeSMSFlash() {
@@ -1868,14 +2410,11 @@
             
             const initial = currentUser.name.charAt(0).toUpperCase();
             document.getElementById('headerAvatar').innerHTML = `<span>${initial}</span>`;
-            document.getElementById('profileAvatar').innerHTML = '🇹🇬';
             
-            document.getElementById('profileName').textContent = currentUser.name;
-            document.getElementById('profilePhone').innerHTML = `<i class="fas fa-phone-alt"></i> ${phoneFormatted}`;
-            document.getElementById('profileSoldeMixx').textContent = (currentUser.soldeMixx || 0).toLocaleString() + ' FCFA';
-            document.getElementById('profileSoldeCredit').textContent = (currentUser.soldeCredit || 0).toLocaleString() + ' FCFA';
-            
-            updateSaisieAffichage();
+            if (document.getElementById('currentMixxValue')) {
+                document.getElementById('currentMixxValue').textContent = (currentUser.soldeMixx || 0).toLocaleString() + ' FCFA';
+                document.getElementById('currentCreditValue').textContent = (currentUser.soldeCredit || 0).toLocaleString() + ' FCFA';
+            }
             
             saveCurrentUser();
         }
@@ -1884,19 +2423,27 @@
         function switchMainTab(tab) {
             const tabs = document.querySelectorAll('#mainScreen .tab');
             const panels = document.querySelectorAll('#mainScreen .panel');
-            
             tabs.forEach(t => t.classList.remove('active'));
             panels.forEach(p => p.classList.remove('active'));
             
-            const tabIndex = ['ussd', 'soldes', 'saisie', 'compte'].indexOf(tab);
+            const tabIndex = ['ussd', 'historique', 'statistiques', 'saisie'].indexOf(tab);
             if (tabIndex !== -1) {
                 tabs[tabIndex].classList.add('active');
                 document.getElementById(`panel-${tab}`).classList.add('active');
             }
             
-            if (tab === 'saisie') {
-                updateSaisieAffichage();
+            if (tab === 'historique') {
+                filteredOperations = [...operations];
                 updateHistoriqueOperations();
+            }
+            if (tab === 'statistiques') {
+                setTimeout(() => {
+                    updateMonthlyStats();
+                    updateCharts();
+                }, 100);
+            }
+            if (tab === 'saisie') {
+                updateUserInterface();
             }
         }
 
@@ -1907,18 +2454,12 @@
             const msg = document.getElementById('toastMsg');
             
             toast.classList.remove('show');
-            
-            if (type === 'success') {
-                icon.className = 'fas fa-check-circle';
-                toast.style.borderLeftColor = 'var(--togo-green)';
-            } else if (type === 'error') {
-                icon.className = 'fas fa-exclamation-circle';
-                toast.style.borderLeftColor = 'var(--togo-red)';
-            } else {
-                icon.className = 'fas fa-info-circle';
-                toast.style.borderLeftColor = 'var(--togo-yellow)';
-            }
-            
+            icon.className = type === 'success' ? 'fas fa-check-circle' : 
+                            type === 'error' ? 'fas fa-exclamation-circle' : 
+                            'fas fa-info-circle';
+            toast.style.borderLeftColor = type === 'success' ? 'var(--togo-green)' : 
+                                         type === 'error' ? 'var(--togo-red)' : 
+                                         'var(--togo-yellow)';
             msg.textContent = message;
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 3000);
@@ -1927,32 +2468,31 @@
         // ===== INITIALISATION =====
         window.onload = function() {
             loadUsers();
-            if (currentUser) {
-                completeLogin();
-            } else {
-                // Utilisateur par défaut
+            if (!currentUser) {
                 currentUser = users[0];
                 saveCurrentUser();
-                completeLogin();
             }
-            showToast('🇹🇬 MY YAS • Togo', 'success');
+            completeLogin();
         };
 
-        // Exposer fonctions globales
+        // ===== FONCTIONS GLOBALES =====
         window.switchAuthTab = switchAuthTab;
         window.registerUser = registerUser;
         window.loginUser = loginUser;
-        window.logout = logout;
+        window.switchMainTab = switchMainTab;
         window.dialUssd = dialUssd;
         window.getSoldeMixx = getSoldeMixx;
         window.getSoldeCredit = getSoldeCredit;
-        window.switchMainTab = switchMainTab;
-        window.closeSMSFlash = closeSMSFlash;
         window.ajouterSoldeMixx = ajouterSoldeMixx;
         window.ajouterSoldeCredit = ajouterSoldeCredit;
         window.resetSoldeMixx = resetSoldeMixx;
         window.resetSoldeCredit = resetSoldeCredit;
         window.resetAllSoldes = resetAllSoldes;
+        window.applyFilters = applyFilters;
+        window.resetFilters = resetFilters;
+        window.goToPage = goToPage;
+        window.changeMonth = changeMonth;
+        window.closeSMSFlash = closeSMSFlash;
     </script>
 </body>
 </html>
